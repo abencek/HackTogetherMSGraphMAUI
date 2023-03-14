@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HackTogetherMSGraphMAUI.MainPage"
+             xmlns:model="clr-namespace:HackTogetherMSGraphMAUI.Models"
+             xmlns:viewmodel="clr-namespace:HackTogetherMSGraphMAUI.ViewModels"
+             x:DataType="{x:Type viewmodel:MainPageViewModel}">
+
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="LargeFontLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+        <Style x:Key="TitleLabel" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource Primary}" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+    
+    <Grid
+        RowDefinitions="Auto,*"
+        HorizontalOptions="Center">
+        <VerticalStackLayout 
+            Grid.Row="0"
+            Margin="0,20,0,0">
+            
+            <!--Title text-->
+            <Label 
+                Text="HACK TOGETHER"
+                Style="{StaticResource TitleLabel}"/>
+            <Label 
+                Text="Microsoft Graph and .NET MAUI!"
+                Style="{StaticResource TitleLabel}"/>
+
+            <!--Update command button-->
+            <Button 
+                Text="DISPLAY MY EXCEL FILES"
+                SemanticProperties.Hint="Loads data from Microsoft Graph"
+                HorizontalOptions="Center" 
+                Command="{Binding GetFilesCommand}"
+                Margin="0,20"/>
+
+        </VerticalStackLayout>
+
+        <!--List of files-->
+        <CollectionView 
+            Grid.Row="1"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsNotBusy}"
+            ItemsSource="{Binding ExcelFiles}">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="4" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:ExcelFile}">
+                    <Border 
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource Blue400Accent}"
+                        StrokeShape="RoundRectangle 10"
+                        MaximumWidthRequest="310"
+                        Padding="20,10">
+                        <Grid 
+                            RowDefinitions="Auto,Auto,Auto"
+                            ColumnDefinitions="Auto,Auto,Auto,*" 
+                            ColumnSpacing="5">
+
+                            <!--File name-->
+                            <Label 
+                                Grid.Column="0"
+                                Grid.Row="0" 
+                                Grid.ColumnSpan="4"
+                                Style="{StaticResource LargeFontLabel}"
+                                Margin="0,0,0,2"
+                                MaxLines="1"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Name}"/>
+
+                            <!--Created date and time-->
+                            <Label 
+                                Grid.Column="0"
+                                Grid.Row="1" 
+                                Text="Created:"/>
+                            <Label 
+                                Grid.Column="1"
+                                Grid.Row="1" 
+                                Text="{Binding CreatedDateTime}"/>
+
+                            <!--Last modified date and time-->
+                            <Label 
+                                Grid.Column="0"
+                                Grid.Row="2" 
+                                Text="Modified:"/>
+                            <Label 
+                                Grid.Column="1"
+                                Grid.Row="2" 
+                                Text="{Binding LastModifiedDateTime}"/>
+
+                            <!--Number of worksheets-->
+                            <Label 
+                                Grid.Column="2"
+                                Grid.Row="1" 
+                                Margin="25,0,0,0"
+                                Text="Sheets:"/>
+                            <Label 
+                                Grid.Column="3"
+                                Grid.Row="1" 
+                                Margin="20,0,0,0"
+                                Text="{Binding Sheets}"/>
+
+                            <!--Number of tables-->
+                            <Label 
+                                Grid.Column="2"
+                                Grid.Row="2" 
+                                Margin="25,0,0,0"
+                                Text="Tables:"/>
+                            <Label 
+                                Grid.Column="3"
+                                Grid.Row="2" 
+                                Margin="20,0,0,0"
+                                Text="{Binding Tables}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        <!--Loading activity indicator-->
+        <ActivityIndicator 
+            Grid.Row="1"
+            Margin="0,20"
+            VerticalOptions="Start"
+            HorizontalOptions="FillAndExpand"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"/>
+    </Grid>
+
+</ContentPage>
